@@ -24,6 +24,7 @@ interface SqueareProps {
   onClick: () => void;
   PlayerXIcon: string;
   PlayerOIcon: string;
+  isWinningSquare: boolean;
 }
 
 const Squares: React.FC<SqueareProps> = ({
@@ -31,9 +32,13 @@ const Squares: React.FC<SqueareProps> = ({
   onClick,
   PlayerXIcon,
   PlayerOIcon,
+  isWinningSquare,
 }) => {
   return (
-    <div className="square" onClick={onClick}>
+    <div
+      className={`square ${isWinningSquare ? "winning-square" : ""}`}
+      onClick={onClick}
+    >
       {value === "X" && (
         <img src={PlayerXIcon} alt="X Icon" width={60} height={60} />
       )}
@@ -51,6 +56,7 @@ const TicTacToe: React.FC = () => {
   const [isXNext, setIsXNext] = useState(true);
   const [winner, setWinner] = useState<string | null>(null);
   const [inGame, setInGame] = useState(false);
+  const [winningLine, setWinningLine] = useState<number[]>([]);
 
   const [PlayerXIcon, setPlayerXIcon] = useState<string>(
     "/icons/ticTacToe/OiX.svg"
@@ -61,17 +67,20 @@ const TicTacToe: React.FC = () => {
 
   const resetGame = () => {
     setSquares(Array(9).fill(null));
+    setWinningLine([]);
     setIsXNext(true);
     setWinner(null);
     setInGame(false);
   };
 
   const startGame = () => {
-    resetGame();
     setInGame(true);
   };
 
   const handleClick = (index: number) => {
+    if (!inGame) {
+      setInGame(true);
+    }
     if (squares[index] || winner) {
       return;
     }
@@ -102,6 +111,7 @@ const TicTacToe: React.FC = () => {
         squares[a] === squares[c]
       ) {
         setWinner(squares[a]);
+        setWinningLine([a, b, c]);
         return;
       }
     }
@@ -156,10 +166,10 @@ const TicTacToe: React.FC = () => {
           ) : (
             <>
               <h3>Draw:</h3>
-              <div className="draw ">
+              <div className="instructions-info">
                 <img src={PlayerXIcon} alt="icon X" />
               </div>
-              <div className="draw ">
+              <div className="instructions-info">
                 <img src={PlayerOIcon} alt="icon O" />
               </div>
             </>
@@ -168,44 +178,38 @@ const TicTacToe: React.FC = () => {
 
       {/* Game Start/Reset Button */}
       <div>
-        {inGame || winner ? (
-          <button className="button" onClick={resetGame}>
-            Reset
-          </button>
-        ) : (
+        {!inGame && !winner ? (
           <button className="button" onClick={startGame}>
             Start
           </button>
-        )}
+        ) : null}
+      </div>
+      <div>
+        {winner ? (
+          <button className="button" onClick={resetGame}>
+            Reset
+          </button>
+        ) : null}
       </div>
 
       {/* Game Container with Players and Board */}
       <div className="game-container">
         {/* Player X Icons */}
 
-        {!inGame ? (
-          <div className="player-icons-l">
-            <p>Player X</p>
-            <div className="icons">
-              {icons.map((icon, index) => (
-                <div
-                  className="icon"
-                  key={index}
-                  onClick={() => handleXIcon(icon)}
-                >
-                  <img src={icon} alt="icon" />
-                </div>
-              ))}
-            </div>
+        <div className="player-icons-l">
+          <p>Player X</p>
+          <div className="icons">
+            {icons.map((icon, index) => (
+              <div
+                className={`icon ${icon === PlayerXIcon ? "selected" : ""}`}
+                key={index}
+                onClick={() => handleXIcon(icon)}
+              >
+                <img src={icon} alt="icon" />
+              </div>
+            ))}
           </div>
-        ) : (
-          <div className="player-icons-l">
-            <p>Player X</p>
-            <div>
-              <img src={PlayerXIcon} alt="" />
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Game Board */}
         <div className="board">
@@ -216,34 +220,27 @@ const TicTacToe: React.FC = () => {
               onClick={() => handleClick(index)}
               PlayerXIcon={PlayerXIcon}
               PlayerOIcon={PlayerOIcon}
+              isWinningSquare={winningLine.includes(index)}
             />
           ))}
         </div>
 
         {/* Player O Icons */}
-        {!inGame ? (
-          <div className="player-icons-r">
-            <p>Player O</p>
-            <div className="icons">
-              {icons.map((icon, index) => (
-                <div
-                  className="icon"
-                  key={index}
-                  onClick={() => handleOIcon(icon)}
-                >
-                  <img src={icon} alt="icon" />
-                </div>
-              ))}
-            </div>
+
+        <div className="player-icons-r">
+          <p>Player O</p>
+          <div className="icons">
+            {icons.map((icon, index) => (
+              <div
+                className={`icon ${icon === PlayerOIcon ? "selected" : ""}`}
+                key={index}
+                onClick={() => handleOIcon(icon)}
+              >
+                <img src={icon} alt="icon" />
+              </div>
+            ))}
           </div>
-        ) : (
-          <div className="player-icons-r">
-            <p>Player O</p>
-            <div>
-              <img src={PlayerOIcon} alt="" />
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
