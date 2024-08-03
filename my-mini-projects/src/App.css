@@ -1,0 +1,5 @@
+@font-face {
+  font-family: "PermanentMarker-Regular"; /*Can be any text*/
+  src: local("PermanentMarker-Regular"),
+    url("./PermanentMarker-Regular.ttf") format("truetype");
+}
