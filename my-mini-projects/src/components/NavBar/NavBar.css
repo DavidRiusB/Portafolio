@@ -1,0 +1,18 @@
+.navbar {
+  background-color: black;
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px 20px;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #f0a500; /* A nice gold color for hover effect */
+}
