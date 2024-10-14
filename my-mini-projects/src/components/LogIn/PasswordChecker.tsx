@@ -28,7 +28,7 @@ const PasswordChecker: React.FC = () => {
   return (
     <div className="layout">
       <div className="character">
-        {/* Character can be added here for animation */}
+        <img src="/Img/Login/octoBase.png" alt="Octopuss Logo" />
       </div>
       <form onSubmit={(e) => e.preventDefault()}>
         <h3>Enter Your Password</h3>
