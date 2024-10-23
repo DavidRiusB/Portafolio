@@ -54,10 +54,16 @@ const Stuttering: React.FC = () => {
 
   const stutterWord = (word: string, stutterType: string): string => {
     if (word.length > 1) {
-      console.log("stutterWord");
-      return stutterType === "repeat-first"
-        ? `${word[0]}-${word}`
-        : `${word}... ${word}`;
+      switch (stutterType) {
+        case "repeat-first":
+          return `${word[0]}-${word}`;
+        case "repeat-word":
+          return `${word}... ${word}`;
+        case "repeat-letter":
+          return repeatSpecificLetters(word);
+        default:
+          return "";
+      }
     }
     return word; // No stuttering for words not in the list
   };
@@ -150,6 +156,7 @@ const Stuttering: React.FC = () => {
           >
             <option value="repeat-first">Repeat first letter</option>
             <option value="repeat-word">Repeat whole word</option>
+            <option value="repeat-letter">Repeat specific letters</option>
           </select>
 
           <label htmlFor="repeat-letters">
